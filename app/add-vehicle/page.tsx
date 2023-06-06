@@ -4,12 +4,13 @@ import { useState } from "react";
 
 // import { Spin } from "antd";
 
-import dayjs from "dayjs";
-
-import classes from "./page.module.css";
-import MainNavigation from "../components/layout/MainNavigation";
 import antdNotification from "@/utils/notification";
+import dayjs from "dayjs";
+import { useRouter } from "next/navigation";
+
 import { AntdForm } from "@/utils/AntdForm";
+import MainNavigation from "../components/layout/MainNavigation";
+import classes from "./page.module.css";
 
 function AddVehicle() {
   const [vehicleName, setVehicleName] = useState("");
@@ -32,7 +33,7 @@ function AddVehicle() {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  // const navigate = useNavigate();
+  const router = useRouter();
 
   function vehicleNameHandler(e: any) {
     setVehicleName(e.target.value);
@@ -42,9 +43,11 @@ function AddVehicle() {
     setVin(e.target.value);
   }
 
+  // _data : because it is not used
   function dateHandler(_date: Date, dateString: string) {
+    // var d = new Date(dateString)
     if (dateString !== "") {
-      setYear(dayjs(dateString).format("YYYY-MM-DD"));
+      setYear(dateString);
     } else {
       setYear("");
     }
@@ -142,7 +145,7 @@ function AddVehicle() {
     return false;
   }
 
-  function submitHandler(e: any) {
+  async function submitHandler(e: any) {
     e.preventDefault();
     setIsLoading(true);
     var base64Img: any = [];
@@ -152,25 +155,74 @@ function AddVehicle() {
     });
     const addVehicleURl = "http://localhost:8000/api/vehicle/";
 
-    // const json = JSON.stringify({
-    //   name: vehicleName,
-    //   vin: vin,
-    //   kilometers: kilometers,
-    //   year: year["$y"],
-    //   engine_size: engineSize,
-    //   color: color,
-    //   doors: doors,
-    //   fuel_type: fuelType,
-    //   drivetrain: driveTrain,
-    //   engine_power: enginePower,
-    //   length: length,
-    //   width: width,
-    //   height: height,
-    //   cylinders: cylinders,
-    //   manufacturer: manufacturer,
-    //   images: base64Img,
-    // });
+    const json = JSON.stringify({
+      name: vehicleName,
+      vin: vin,
+      kilometers: kilometers,
+      year: parseInt(year),
+      engine_size: engineSize,
+      color: color,
+      doors: doors,
+      fuel_type: fuelType,
+      drivetrain: driveTrain,
+      engine_power: enginePower,
+      length: length,
+      width: width,
+      height: height,
+      cylinders: cylinders,
+      manufacturer: manufacturer,
+      images: base64Img,
+    });
 
+    console.log(json);
+
+    console.log(base64Img)
+
+    const res = await fetch(addVehicleURl,
+      {
+        method: "POST",
+        body: json,
+        headers: {
+          "Content-Type": "application/json"
+        },
+      })
+
+    if (res.ok) {
+      setTimeout(() => {
+        router.push("/home");
+        antdNotification("success", "", "Vehicle added successfully");
+      }, 2000);
+    }
+    else {
+      const response = await res.json()
+      console.log()
+
+      if (
+        hasListWithFirstElementContainingString(response.data, " This field may not") || hasListWithFirstElementContainingString(response.data, "This field is required.")
+      ) {
+        antdNotification(
+          "error",
+          "",
+          "All fields are required."
+        );
+      }
+
+
+      if (response.data.vin) {
+        if (
+          response.data.vin[0] ===
+          "vehicle with this vin already exists."
+        ) {
+          antdNotification(
+            "error",
+            "",
+            "Vehicle with this VIN already exists."
+          );
+        }
+
+
+      }
+    }
     // axios({
     //   method: "post",
     //   url: addVehicleURl,
@@ -238,7 +290,7 @@ function AddVehicle() {
             vinHandler={vinHandler}
             vin={vin}
             disabledYear={disabledYear}
-            year={year}
+            year={(year ? dayjs(year) : "")}
             dateHandler={dateHandler}
             engineSizeHandler={engineSizeHandler}
             engineSize={engineSize}

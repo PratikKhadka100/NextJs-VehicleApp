@@ -1,13 +1,10 @@
+"use client";
 import { useRouter } from "next/navigation";
 
-import { Card, Col, Row, Space, Divider } from "antd";
-import { BsCalendarDate } from "react-icons/bs";
-import { GiSpeedometer } from "react-icons/gi";
-import { BsFuelPump } from "react-icons/bs";
-import { GiPowerLightning } from "react-icons/gi";
+import { Card, Col, Divider, Row, Space } from "antd";
+import { BsCalendarDate, BsFuelPump } from "react-icons/bs";
+import { GiPowerLightning, GiSpeedometer } from "react-icons/gi";
 
-import Link from "next/link";
-import Image from "next/image";
 import classes from "./VehicleItem.module.css";
 
 function VehicleItem(props: any) {
@@ -20,26 +17,26 @@ function VehicleItem(props: any) {
         <Col span={8}>
           <Card
             style={{ width: 400 }}
-            // cover={
-            //   <img
-            //     src={`${props.vimg[0] ? props.vimg[0] : null}`}
-            //     alt=""
-            //     // onClick={() => {
-            //     //   imgClickHandler(props.id);
-            //     // }}
-            //     style={{ cursor: "pointer" }}
-            //   />
-            // }
+            cover={
+              <img
+                src={`${props.vimg[0] ? props.vimg[0] : null}`}
+                alt=""
+                // onClick={() => {
+                //   imgClickHandler(props.id);
+                // }}
+                style={{ cursor: "pointer" }}
+              />
+            }
             actions={[
               <button
                 className={classes.deleteBtn}
-                // onClick={() => deleteHandler(props.id)}
+              // onClick={() => deleteHandler(props.id)}
               >
                 Delete
               </button>,
               <button
                 className={classes.editBtn}
-                // onClick={() => editHandler(props.id)}
+              // onClick={() => editHandler(props.id)}
               >
                 Edit
               </button>,
@@ -83,9 +80,9 @@ function VehicleItem(props: any) {
             </Row>
             <Divider />
             <div className={classes.viewDetails}>
-              {/* <span onClick={() => imgClickHandler(props.id)}>
-              View More Details
-            </span> */}
+              <span>
+                View More Details
+              </span>
             </div>
           </Card>
         </Col>

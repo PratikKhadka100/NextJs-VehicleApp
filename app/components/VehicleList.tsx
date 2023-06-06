@@ -1,3 +1,4 @@
+"use client";
 import VehicleItem from "./VehicleItem";
 import classes from "./VehicleList.module.css";
 

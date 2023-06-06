@@ -1,3 +1,5 @@
+"use client";
+
 import MainNavigation from "../components/layout/MainNavigation";
 import VehicleList from "../components/VehicleList";
 
@@ -27,6 +29,13 @@ async function Home() {
         </div>
       ) : (
         <VehicleList vehicles={fetchedVehicles} />
+        // fetchedVehicles.map((e: any) =>
+        //   <div style={{ marginTop: "140px" }}>
+        //     <h1 >{e.name}</h1>
+        //     <h3>{e.vin}</h3>
+
+        //   </div>
+        // )
       )}
     </div>
   );

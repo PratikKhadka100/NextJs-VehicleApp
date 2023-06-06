@@ -1,14 +1,14 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 import Image from "next/image";
 import Link from "next/link";
 
-import classes from "./page.module.css";
-import Validation from "@/utils/validation";
 import antdNotification from "@/utils/notification";
+import Validation from "@/utils/validation";
+import classes from "./page.module.css";
 function SignIn() {
   type User = {
     email?: string;
@@ -86,7 +86,7 @@ function SignIn() {
     <div className={classes.formContainer}>
       {/* {isLoading ? spinIndicator("#24a0ed") : ""} */}
       <Image
-        src="/images/logo.png"
+        src="/images/Logo.png"
         alt="Logo"
         className={classes.logo}
         height={80}
