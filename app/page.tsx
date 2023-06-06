@@ -1,95 +1,137 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+"use client";
 
-export default function Home() {
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+
+import Image from "next/image";
+import Link from "next/link";
+
+import classes from "./page.module.css";
+import Validation from "@/utils/validation";
+import antdNotification from "@/utils/notification";
+function SignIn() {
+  type User = {
+    email?: string;
+    password?: string;
+  };
+
+  const router = useRouter();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const [errors, setErrors] = useState<User>({});
+
+  function emailHandler(e: any) {
+    setEmail(e.target.value);
+  }
+
+  function passwordHandler(e: any) {
+    setPassword(e.target.value);
+  }
+
+  async function submitHandler(e: any) {
+    e.preventDefault();
+
+    const values = {
+      email,
+      password,
+    };
+
+    const validationErrors = Validation(values);
+
+    const loginUrl = "http://localhost:8000/api/login/";
+
+    if (Object.keys(validationErrors).length < 2) {
+      const json = JSON.stringify({
+        email: email,
+        password: password,
+      });
+
+      const response = await fetch(loginUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: json,
+      });
+      if (response.ok) {
+        antdNotification(
+          "success",
+          "Sign in success",
+          "You are logged in successfully"
+        );
+        router.push("/home");
+      } else {
+        antdNotification(
+          "error",
+          "Sign in failed",
+          "Invalid email or password"
+        );
+      }
+    } else {
+      setErrors(validationErrors);
+    }
+  }
+
+  const errorStyle = {
+    color: "red",
+    fontSize: "10px",
+    maxHeight: "15px",
+    maxWidth: "200px",
+    textOverflow: "ellipsis",
+  };
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+    <div className={classes.formContainer}>
+      {/* {isLoading ? spinIndicator("#24a0ed") : ""} */}
+      <Image
+        src="/images/logo.png"
+        alt="Logo"
+        className={classes.logo}
+        height={80}
+        width={200}
+      />
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
+      <form className={classes.signForm} onSubmit={submitHandler}>
+        <label htmlFor="email" className={classes.label}>
+          Email
+        </label>
+        <input
+          type="email"
+          placeholder="Email"
+          id="email"
+          className={classes.input}
+          value={email}
+          onChange={emailHandler}
         />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
+        {errors.email && <span style={errorStyle}>{errors.email}</span>}
+        <label htmlFor="password" className={classes.label}>
+          Password
+        </label>
+        <input
+          type="password"
+          id="password"
+          placeholder="Password"
+          className={classes.input}
+          value={password}
+          onChange={passwordHandler}
+        />
+        {errors.password && <span style={errorStyle}>{errors.password}</span>}
+        <button type="submit" className={classes.button}>
+          Sign in
+        </button>
+        <div className={classes.signupSignIn}>
           <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
+            Don't have an account?{" "}
+            <Link href="/signup" style={{ color: "#24a0ed" }}>
+              Sign up
+            </Link>
           </p>
-        </a>
-      </div>
-    </main>
-  )
+        </div>
+      </form>
+    </div>
+  );
 }
+
+export default SignIn;

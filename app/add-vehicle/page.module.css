@@ -1,0 +1,72 @@
+.formContainer {
+  margin-top: 5rem;
+  margin-bottom: 2rem;
+  padding-top: 90px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.vehicleForm {
+  display: flex;
+  flex-direction: column;
+}
+
+.submitBtnDiv {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.submitBtn {
+  width: 50%;
+  background-color: #051a2f;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: 0 8px 12px 0 rgba(0,0,0,0.1);
+}
+
+.imgDiv {
+  text-align: center;
+  padding: 10px;
+  background-color: white;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  border-radius: 5px;
+}
+
+.uploadedImg {
+  height: 120px;
+  width: 200px;
+  object-fit: contain;
+}
+
+.content {
+  padding: 50px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+}
+
+
+@media (max-width: 600px) {
+  .formContainer {
+    max-width: 400px;
+  }
+  
+}
+
+.antFormItem {
+  width: 600px;
+}
+
+@media (max-width: 600px) {
+  .antFormItem {
+    width: 100%;
+  }
+}
+
+
+
+
