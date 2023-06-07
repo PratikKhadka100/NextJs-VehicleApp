@@ -21,6 +21,7 @@ function SignIn() {
   const [password, setPassword] = useState("");
 
   const [errors, setErrors] = useState<User>({});
+  const [isLoading, setIsLoading] = useState(false);
 
   function emailHandler(e: any) {
     setEmail(e.target.value);

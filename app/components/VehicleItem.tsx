@@ -6,10 +6,35 @@ import { BsCalendarDate, BsFuelPump } from "react-icons/bs";
 import { GiPowerLightning, GiSpeedometer } from "react-icons/gi";
 
 import classes from "./VehicleItem.module.css";
+import AntdConfirmModal from "@/utils/AntdConfirmModal";
 
 function VehicleItem(props: any) {
   const { Meta } = Card;
   const router = useRouter();
+
+  const deleteVehicle = async (vehicleId: number) => {
+    const deleteVehicleUrl = `http://localhost:8000/api/vehicle/${vehicleId}/`;
+
+    const res = await fetch(deleteVehicleUrl, {
+      method: "delete",
+      headers: { "content-type": "application/json" },
+    });
+
+    if (res.ok) {
+      router.refresh();
+    } else {
+      console.log(res);
+      console.log("failed");
+    }
+  };
+
+  function deleteHandler() {
+    AntdConfirmModal("Are you sure, delete this vehicle?", "", () =>
+      deleteVehicle(props.id)
+    );
+  }
+
+  function editHandler(id: number) {}
 
   return (
     <div className={classes.cardDiv}>
@@ -19,7 +44,9 @@ function VehicleItem(props: any) {
             style={{ width: 400 }}
             cover={
               <img
-                src={`${props.vimg[0] ? props.vimg[0] : null}`}
+                src={`${
+                  props.vimg[0] ? props.vimg[0] : "/images/default-img.png"
+                }`}
                 alt=""
                 // onClick={() => {
                 //   imgClickHandler(props.id);
@@ -28,15 +55,12 @@ function VehicleItem(props: any) {
               />
             }
             actions={[
-              <button
-                className={classes.deleteBtn}
-              // onClick={() => deleteHandler(props.id)}
-              >
+              <button className={classes.deleteBtn} onClick={deleteHandler}>
                 Delete
               </button>,
               <button
                 className={classes.editBtn}
-              // onClick={() => editHandler(props.id)}
+                onClick={() => editHandler(props.id)}
               >
                 Edit
               </button>,
@@ -80,9 +104,7 @@ function VehicleItem(props: any) {
             </Row>
             <Divider />
             <div className={classes.viewDetails}>
-              <span>
-                View More Details
-              </span>
+              <span>View More Details</span>
             </div>
           </Card>
         </Col>
