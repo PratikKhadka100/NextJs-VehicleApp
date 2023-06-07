@@ -11,7 +11,7 @@ function MainNavigation() {
   return (
     <nav className={classes.mainNav}>
       <div className={classes.logo}>
-        <Image src={Logo} alt="Logo" height={80} width={250} />
+        <Image src={Logo} alt="Logo" height={80} width={200} />
       </div>
 
       <ul className={classes.menuLink}>

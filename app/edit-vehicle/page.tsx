@@ -1,14 +1,22 @@
-import { useState, useEffect } from "react";
+"use client";
+
+import { useState } from "react";
 import { Spin } from "antd";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import dayjs from "dayjs";
 
-import classes from "./AddVehicle.module.css";
+import classes from "../add-vehicle/page.module.css";
 import MainNavigation from "../components/layout/MainNavigation";
 import antdNotification from "@/utils/notification";
 import { AntdForm } from "@/utils/AntdForm";
 
-function EditVehicle() {
+async function fetchEditVehicle(id: any) {
+  const res = await fetch(`http://localhost:8000/api/vehicle/${id}`);
+  return res.json();
+}
+
+async function EditVehicle() {
   const [vehicleName, setVehicleName] = useState("");
   const [vin, setVin] = useState("");
   const [year, setYear] = useState<any>();
@@ -24,9 +32,33 @@ function EditVehicle() {
   const [kilometers, setKilometers] = useState(null);
   const [cylinders, setCylinders] = useState(null);
   const [manufacturer, setManufacturer] = useState("");
-  const [image, setImage] = useState();
+  const [image, setImage] = useState<any>();
 
   const [isLoading, setIsLoading] = useState(false);
+
+  const router = useRouter();
+  const params = useSearchParams();
+
+  const id = params.get("id");
+  console.log(id);
+
+  const response = await fetchEditVehicle(id);
+
+  setVehicleName(response.name);
+  setVin(response.vin);
+  setYear(dayjs(response.year.toString()));
+  setEngineSize(response.engine_size);
+  setDoors(response.doors);
+  setColor(response.color);
+  setFuelType(response.fuel_type);
+  setDriveTrain(response.drivetrain);
+  setEnginePower(response.engine_power);
+  setLength(response.length);
+  setHeight(response.height);
+  setWidth(response.width);
+  setKilometers(response.kilometers);
+  setCylinders(response.cylinders);
+  setManufacturer(response.manufacturer);
 
   function vehicleNameHandler(e: any) {
     setVehicleName(e.target.value);
@@ -108,21 +140,21 @@ function EditVehicle() {
     });
   };
 
-  // const normFile = async (e: any) => {
-  //   console.log(e);
-  //   const fileList = e?.fileList;
-  //   console.log(e.file.status);
-  //   if (!e.file.status) {
-  //     const base64 = await convertBase64(e.file);
+  const normFile = async (e: any) => {
+    console.log(e);
+    const fileList = e?.fileList;
+    console.log(e.file.status);
+    if (!e.file.status) {
+      const base64 = await convertBase64(e.file);
 
-  //     setImage([...image, {"uid": e.file.uid, "url": base64 }]);
-  //   } else {
-  //     const filtered = image.filter((img) => img["uid"] != e.file.uid);
-  //     setImage(filtered);
-  //   }
+      setImage([...image, { uid: e.file.uid, url: base64 }]);
+    } else {
+      const filtered = image.filter((img: any) => img["uid"] != e.file.uid);
+      setImage(filtered);
+    }
 
-  //   return fileList;
-  // };
+    return fileList;
+  };
 
   function hasListWithFirstElementContainingString(
     obj: any,
@@ -251,7 +283,7 @@ function EditVehicle() {
               manufacturerHandler={manufacturerHandler}
               manufacturer={manufacturer}
               image={image}
-              // normFile={normFile}
+              normFile={normFile}
               btnName="Update"
             />
           </div>

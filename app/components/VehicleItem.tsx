@@ -34,7 +34,13 @@ function VehicleItem(props: any) {
     );
   }
 
-  function editHandler(id: number) {}
+  function editHandler(id: any) {
+    // router.push({
+    //   pathname: "/edit-vehicle",
+    //   query: {id: id},
+    // }, "/edit-vehicle");
+    router.push(`/edit-vehicle?id=${id}`);
+  }
 
   return (
     <div className={classes.cardDiv}>
