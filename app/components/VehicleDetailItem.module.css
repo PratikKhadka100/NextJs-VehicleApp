@@ -1,0 +1,17 @@
+.contents {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0; 
+}
+
+.descriptions {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  padding: 10px;
+  color: white;
+  font-weight: bold;
+  width: 150px;
+  overflow-wrap: break-word; 
+}

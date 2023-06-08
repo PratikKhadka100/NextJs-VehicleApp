@@ -28,6 +28,10 @@ function VehicleItem(props: any) {
     }
   };
 
+  function imgClickHandler(id: any) {
+    router.push(`/vehicle-details?id=${id}`);
+  }
+
   function deleteHandler() {
     AntdConfirmModal("Are you sure, delete this vehicle?", "", () =>
       deleteVehicle(props.id)
@@ -54,9 +58,9 @@ function VehicleItem(props: any) {
                   props.vimg[0] ? props.vimg[0] : "/images/default-img.png"
                 }`}
                 alt=""
-                // onClick={() => {
-                //   imgClickHandler(props.id);
-                // }}
+                onClick={() => {
+                  imgClickHandler(props.id);
+                }}
                 style={{ cursor: "pointer" }}
               />
             }
@@ -110,7 +114,13 @@ function VehicleItem(props: any) {
             </Row>
             <Divider />
             <div className={classes.viewDetails}>
-              <span>View More Details</span>
+              <span
+                onClick={() => {
+                  imgClickHandler(props.id);
+                }}
+              >
+                View More Details
+              </span>
             </div>
           </Card>
         </Col>

@@ -57,6 +57,7 @@ function SignIn() {
         body: json,
       });
       if (response.ok) {
+        console.log(response.json());
         antdNotification(
           "success",
           "Sign in success",

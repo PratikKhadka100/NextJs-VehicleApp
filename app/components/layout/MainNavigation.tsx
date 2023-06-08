@@ -1,13 +1,18 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Logo from "../../../public/images/Logo.png";
 
 import Image from "next/image";
 import classes from "./MainNavigation.module.css";
+import antdNotification from "@/utils/notification";
 
 function MainNavigation() {
-  function signOutHandler() { }
+  const router = useRouter();
+  function signOutHandler() {
+    router.replace("/");
+  }
   return (
     <nav className={classes.mainNav}>
       <div className={classes.logo}>
@@ -21,7 +26,9 @@ function MainNavigation() {
         <li className={classes.li}>
           <Link href="/add-vehicle">Add Vehicle</Link>
         </li>
-        <li className={classes.signOut} onClick={signOutHandler}>Sign out</li>
+        <li className={classes.signOut} onClick={signOutHandler}>
+          Sign out
+        </li>
       </ul>
     </nav>
   );

@@ -1,0 +1,94 @@
+.container {
+  margin-top: 10rem;
+  text-align: center;
+}
+
+.carName {
+  text-align: left;
+  padding-left: 9rem;
+}
+
+.rowContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.mainImg {
+  border-radius: 8px;
+  width: 730px;
+  object-fit: contain;
+}
+
+.carImages {
+  width: 220px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.techSpec {
+  padding-left:80px;
+  padding-right:80px;
+  padding-bottom: 2.5rem;
+}
+
+.title {
+  font-size: 20px;
+  line-height: 5rem;
+}
+
+.subTitle {
+  font-size: 17px;
+  margin-bottom: 6px;
+  font-weight: 400;
+}
+
+.specRow{
+  border-top: 1px solid #dee2e6;
+  padding: 5px 100px;
+}
+
+.specRow span {
+  font-size: 16px;
+}
+
+.banner {
+  display: grid;
+  place-items: center;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+  padding: 30px 50px;
+  background-color: #051a2f;
+  height: 150px;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+}
+
+@media (max-width: 1000px) {
+  .mainImg {
+    width: 450px;
+  }
+  .carImages {
+    width: 200px;
+  }
+  .banner {
+    grid-template-columns: 1fr 1fr;
+    height: 220px;
+  }
+}
+
+@media (min-width: 1000px) and (max-width: 1450px) {
+  .mainImg {
+    width: 600px;
+  }
+  .carImages {
+    width: 200px;
+  }
+  .banner {
+    grid-template-columns: 1fr 1fr 1fr;
+    height: 220px;
+  }
+}
+
+
