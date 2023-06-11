@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -9,6 +9,7 @@ import Link from "next/link";
 import antdNotification from "@/utils/notification";
 import Validation from "@/utils/validation";
 import classes from "./page.module.css";
+import AntdSpin from "@/utils/AntdSpin";
 function SignIn() {
   type User = {
     email?: string;
@@ -22,6 +23,19 @@ function SignIn() {
 
   const [errors, setErrors] = useState<User>({});
   const [isLoading, setIsLoading] = useState(false);
+  const [isValidating, setIsValidating] = useState(true);
+
+  useEffect(() => {
+    const user = localStorage.getItem("name");
+    if (!(user === null || user === undefined)) {
+      router.replace("/home");
+    } else {
+      setIsValidating(false);
+    }
+    setTimeout(() => {
+      setIsValidating(false);
+    }, 5000);
+  }, []);
 
   function emailHandler(e: any) {
     setEmail(e.target.value);
@@ -31,7 +45,8 @@ function SignIn() {
     setPassword(e.target.value);
   }
 
-  async function submitHandler(e: any) {
+  function submitHandler(e: any) {
+    setIsLoading(true);
     e.preventDefault();
 
     const values = {
@@ -49,29 +64,38 @@ function SignIn() {
         password: password,
       });
 
-      const response = await fetch(loginUrl, {
+      const response = fetch(loginUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: json,
-      });
-      if (response.ok) {
-        console.log(response.json());
-        antdNotification(
-          "success",
-          "Sign in success",
-          "You are logged in successfully"
-        );
-        router.push("/home");
-      } else {
-        antdNotification(
-          "error",
-          "Sign in failed",
-          "Invalid email or password"
-        );
-      }
+      })
+        .then((response) => {
+          if (response.ok) {
+            antdNotification(
+              "success",
+              "Sign in success",
+              "You are logged in successfully"
+            );
+            router.replace("/home");
+          } else {
+            setIsLoading(false);
+            antdNotification(
+              "error",
+              "Sign in failed",
+              "Invalid email or password"
+            );
+          }
+          return response.json();
+        })
+        .then((data) => {
+          localStorage.setItem("access", data.access);
+          localStorage.setItem("refresh", data.refresh);
+          localStorage.setItem("name", data.first_name);
+        });
     } else {
+      setIsLoading(false);
       setErrors(validationErrors);
     }
   }
@@ -85,54 +109,62 @@ function SignIn() {
   };
 
   return (
-    <div className={classes.formContainer}>
-      {/* {isLoading ? spinIndicator("#24a0ed") : ""} */}
-      <Image
-        src="/images/Logo.png"
-        alt="Logo"
-        className={classes.logo}
-        height={80}
-        width={200}
-      />
+    <>
+      {isValidating ? (
+        <p>Validating user please wait...</p>
+      ) : (
+        <div className={classes.formContainer}>
+          {isLoading ? AntdSpin("#24a0ed") : ""}
+          <Image
+            src="/images/Logo.png"
+            alt="Logo"
+            className={classes.logo}
+            height={80}
+            width={200}
+          />
 
-      <form className={classes.signForm} onSubmit={submitHandler}>
-        <label htmlFor="email" className={classes.label}>
-          Email
-        </label>
-        <input
-          type="email"
-          placeholder="Email"
-          id="email"
-          className={classes.input}
-          value={email}
-          onChange={emailHandler}
-        />
-        {errors.email && <span style={errorStyle}>{errors.email}</span>}
-        <label htmlFor="password" className={classes.label}>
-          Password
-        </label>
-        <input
-          type="password"
-          id="password"
-          placeholder="Password"
-          className={classes.input}
-          value={password}
-          onChange={passwordHandler}
-        />
-        {errors.password && <span style={errorStyle}>{errors.password}</span>}
-        <button type="submit" className={classes.button}>
-          Sign in
-        </button>
-        <div className={classes.signupSignIn}>
-          <p>
-            Don't have an account?{" "}
-            <Link href="/signup" style={{ color: "#24a0ed" }}>
-              Sign up
-            </Link>
-          </p>
+          <form className={classes.signForm} onSubmit={submitHandler}>
+            <label htmlFor="email" className={classes.label}>
+              Email
+            </label>
+            <input
+              type="email"
+              placeholder="Email"
+              id="email"
+              className={classes.input}
+              value={email}
+              onChange={emailHandler}
+            />
+            {errors.email && <span style={errorStyle}>{errors.email}</span>}
+            <label htmlFor="password" className={classes.label}>
+              Password
+            </label>
+            <input
+              type="password"
+              id="password"
+              placeholder="Password"
+              className={classes.input}
+              value={password}
+              onChange={passwordHandler}
+            />
+            {errors.password && (
+              <span style={errorStyle}>{errors.password}</span>
+            )}
+            <button type="submit" className={classes.button}>
+              Sign in
+            </button>
+            <div className={classes.signupSignIn}>
+              <p>
+                Don't have an account?{" "}
+                <Link href="/signup" style={{ color: "#24a0ed" }}>
+                  Sign up
+                </Link>
+              </p>
+            </div>
+          </form>
         </div>
-      </form>
-    </div>
+      )}
+    </>
   );
 }
 

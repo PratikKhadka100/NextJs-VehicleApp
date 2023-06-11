@@ -1,16 +1,30 @@
 "use client";
 
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Logo from "../../../public/images/Logo.png";
 
 import Image from "next/image";
 import classes from "./MainNavigation.module.css";
+import AntdSpin from "@/utils/AntdSpin";
 import antdNotification from "@/utils/notification";
 
 function MainNavigation() {
+  const [isLoading, setIsLoading] = useState(false);
+
   const router = useRouter();
   function signOutHandler() {
+    setIsLoading(true);
+    localStorage.removeItem("access");
+    localStorage.removeItem("refresh");
+    localStorage.removeItem("name");
+
+    antdNotification(
+      "success",
+      "Sign out success",
+      "You are signed out successfully"
+    );
     router.replace("/");
   }
   return (
@@ -27,7 +41,7 @@ function MainNavigation() {
           <Link href="/add-vehicle">Add Vehicle</Link>
         </li>
         <li className={classes.signOut} onClick={signOutHandler}>
-          Sign out
+          Sign out {isLoading ? AntdSpin("white") : ""}
         </li>
       </ul>
     </nav>
